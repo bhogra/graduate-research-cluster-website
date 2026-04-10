@@ -1,31 +1,70 @@
 {
-  "error": {
-    "code": 403,
-    "message": "Requests from referer \u003cempty\u003e are blocked.",
-    "errors": [
-      {
-        "message": "Requests from referer \u003cempty\u003e are blocked.",
-        "domain": "global",
-        "reason": "forbidden"
-      }
-    ],
-    "status": "PERMISSION_DENIED",
-    "details": [
-      {
-        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
-        "reason": "API_KEY_HTTP_REFERRER_BLOCKED",
-        "domain": "googleapis.com",
-        "metadata": {
-          "httpReferrer": "\u003cempty\u003e",
-          "service": "calendar-json.googleapis.com",
-          "consumer": "projects/957432669000"
-        }
-      },
-      {
-        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
-        "locale": "en-US",
-        "message": "Requests from referer \u003cempty\u003e are blocked."
-      }
-    ]
+ "kind": "calendar#events",
+ "etag": "\"p32nvrs7vhfi960o\"",
+ "summary": "TSGIR Research Cluster Events",
+ "description": "",
+ "updated": "2026-04-10T20:12:18.791Z",
+ "timeZone": "America/Los_Angeles",
+ "accessRole": "reader",
+ "defaultReminders": [],
+ "items": [
+  {
+   "kind": "calendar#event",
+   "etag": "\"3551703692654078\"",
+   "id": "2atb7q02u7mf7n3s2gqdn0ikeh",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=MmF0YjdxMDJ1N21mN24zczJncWRuMGlrZWggY183ZDY5Y2YyYzAwNDZjOGQ2MWRmOGM4YWU3YjZlZjU4ZTc2YTJmZWM5MGYyMDA0MzA2MGNlNmVlYWI3MjBiZjhlQGc",
+   "created": "2026-04-10T20:10:46.000Z",
+   "updated": "2026-04-10T20:10:46.327Z",
+   "summary": "Test Event, Technologies of Settler Governance and Global Indigenous Response Research Cluster",
+   "creator": {
+    "email": "bhogras@uw.edu"
+   },
+   "organizer": {
+    "email": "c_7d69cf2c0046c8d61df8c8ae7b6ef58e76a2fec90f20043060ce6eeab720bf8e@group.calendar.google.com",
+    "displayName": "TSGIR Research Cluster Events",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2026-09-18T12:00:00-07:00",
+    "timeZone": "America/Los_Angeles"
+   },
+   "end": {
+    "dateTime": "2026-09-18T14:00:00-07:00",
+    "timeZone": "America/Los_Angeles"
+   },
+   "iCalUID": "2atb7q02u7mf7n3s2gqdn0ikeh@google.com",
+   "sequence": 0,
+   "eventType": "default"
+  },
+  {
+   "kind": "calendar#event",
+   "etag": "\"3551703873201982\"",
+   "id": "7r609skga6s18gb3cibgc5s83a",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=N3I2MDlza2dhNnMxOGdiM2NpYmdjNXM4M2EgY183ZDY5Y2YyYzAwNDZjOGQ2MWRmOGM4YWU3YjZlZjU4ZTc2YTJmZWM5MGYyMDA0MzA2MGNlNmVlYWI3MjBiZjhlQGc",
+   "created": "2026-04-10T20:11:28.000Z",
+   "updated": "2026-04-10T20:12:16.600Z",
+   "summary": "Test Event 2, Technologies of Settler Governance and Global Indigenous Response Research Cluster",
+   "creator": {
+    "email": "bhogras@uw.edu"
+   },
+   "organizer": {
+    "email": "c_7d69cf2c0046c8d61df8c8ae7b6ef58e76a2fec90f20043060ce6eeab720bf8e@group.calendar.google.com",
+    "displayName": "TSGIR Research Cluster Events",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2026-10-16T12:00:00-07:00",
+    "timeZone": "America/Los_Angeles"
+   },
+   "end": {
+    "dateTime": "2026-10-16T14:00:00-07:00",
+    "timeZone": "America/Los_Angeles"
+   },
+   "iCalUID": "7r609skga6s18gb3cibgc5s83a@google.com",
+   "sequence": 0,
+   "eventType": "default"
   }
+ ]
 }
