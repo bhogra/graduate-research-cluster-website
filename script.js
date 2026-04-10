@@ -1,33 +1,13 @@
-// ============================================================
-// Configuration — TODO: Fill in your values
-// ============================================================
-
-const CALENDAR_ID = 'c_7d69cf2c0046c8d61df8c8ae7b6ef58e76a2fec90f20043060ce6eeab720bf8e@group.calendar.google.com';
-const API_KEY = 'AIzaSyD7fbm63qQG8mCG61lxUDpE8E4Xhvv5lwk';
-
-// ============================================================
-// Fetch and render events
-// ============================================================
-
 const eventsContainer = document.getElementById('events-list');
 
 async function fetchEvents() {
-  const now = new Date().toISOString();
-  const url =
-    `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}` +
-    `/events?key=${API_KEY}` +
-    `&timeMin=${now}` +
-    `&orderBy=startTime` +
-    `&singleEvents=true` +
-    `&maxResults=20`;
-
   try {
-    const res = await fetch(url);
+    const res = await fetch('./events.json');
     if (!res.ok) throw new Error(res.statusText);
     const data = await res.json();
     render(data.items || []);
   } catch (err) {
-    console.error('Failed to load calendar events:', err);
+    console.error('Failed to load events:', err);
     eventsContainer.innerHTML =
       '<p class="events-error">Unable to load events. Please check back later.</p>';
   }
@@ -78,10 +58,6 @@ function render(events) {
   }).join('');
 }
 
-// ============================================================
-// Helpers
-// ============================================================
-
 function buildAddToCalUrl(event) {
   const fmt = (dt) => dt.replace(/[-:]/g, '').replace('.000', '');
   const start = event.start.dateTime
@@ -110,9 +86,5 @@ function truncate(str, max) {
   if (str.length <= max) return str;
   return str.slice(0, max).trimEnd() + '…';
 }
-
-// ============================================================
-// Init
-// ============================================================
 
 fetchEvents();
