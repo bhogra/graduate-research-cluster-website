@@ -16,8 +16,8 @@
         "reason": "API_KEY_HTTP_REFERRER_BLOCKED",
         "domain": "googleapis.com",
         "metadata": {
-          "service": "calendar-json.googleapis.com",
           "httpReferrer": "\u003cempty\u003e",
+          "service": "calendar-json.googleapis.com",
           "consumer": "projects/957432669000"
         }
       },
