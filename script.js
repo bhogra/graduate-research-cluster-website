@@ -2,8 +2,8 @@
 // Configuration — TODO: Fill in your values
 // ============================================================
 
-const CALENDAR_ID = 'TODO_YOUR_CALENDAR_ID@group.calendar.google.com';
-const API_KEY = 'TODO_YOUR_GOOGLE_API_KEY';
+const CALENDAR_ID = 'c_7d69cf2c0046c8d61df8c8ae7b6ef58e76a2fec90f20043060ce6eeab720bf8e@group.calendar.google.com';
+const API_KEY = 'AIzaSyD7fbm63qQG8mCG61lxUDpE8E4Xhvv5lwk';
 
 // ============================================================
 // Fetch and render events
@@ -58,6 +58,8 @@ function render(events) {
       ? `<p class="event-description">${escapeHTML(truncate(event.description, 200))}</p>`
       : '';
 
+    const addToCalUrl = buildAddToCalUrl(event);
+
     return `
       <article class="event">
         <div class="event-date-col">
@@ -69,6 +71,7 @@ function render(events) {
           <p class="event-time">${time}</p>
           ${location}
           ${description}
+          <a class="event-add-cal" href="${addToCalUrl}" target="_blank" rel="noopener noreferrer">+ Add to Google Calendar</a>
         </div>
       </article>
     `;
@@ -78,6 +81,24 @@ function render(events) {
 // ============================================================
 // Helpers
 // ============================================================
+
+function buildAddToCalUrl(event) {
+  const fmt = (dt) => dt.replace(/[-:]/g, '').replace('.000', '');
+  const start = event.start.dateTime
+    ? fmt(event.start.dateTime)
+    : event.start.date.replace(/-/g, '');
+  const end = event.end.dateTime
+    ? fmt(event.end.dateTime)
+    : event.end.date.replace(/-/g, '');
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: event.summary || '',
+    dates: `${start}/${end}`,
+    details: event.description || '',
+    location: event.location || '',
+  });
+  return `https://calendar.google.com/calendar/render?${params}`;
+}
 
 function escapeHTML(str) {
   const div = document.createElement('div');
