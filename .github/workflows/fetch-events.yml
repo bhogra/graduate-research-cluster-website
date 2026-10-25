@@ -16,8 +16,9 @@ jobs:
 
       - name: Fetch events from Google Calendar
         run: |
-          NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          curl -s "https://www.googleapis.com/calendar/v3/calendars/${{ secrets.CALENDAR_ID }}/events?key=${{ secrets.GOOGLE_API_KEY }}&timeMin=${NOW}&orderBy=startTime&singleEvents=true&maxResults=20" \
+          # Start of the current month, so this month's past events stay on the calendar grid.
+          MONTH_START=$(date -u +"%Y-%m-01T00:00:00Z")
+          curl -s "https://www.googleapis.com/calendar/v3/calendars/${{ secrets.CALENDAR_ID }}/events?key=${{ secrets.GOOGLE_API_KEY }}&timeMin=${MONTH_START}&orderBy=startTime&singleEvents=true&maxResults=50" \
             -o events.json
 
       - name: Commit and push if changed

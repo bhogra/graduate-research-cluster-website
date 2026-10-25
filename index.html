@@ -18,15 +18,25 @@
       <!-- TODO: Replace with actual cluster description -->
       A graduate research cluster examining the intersections of technology, settler-colonial governance structures, and Indigenous resistance and response across global contexts.
     </p>
-    <a href="#" class="listserv-btn" target="_blank" rel="noopener noreferrer">
-      <!-- TODO: Replace href with your Mailman listserv subscription URL -->
-      Join the Listserv
-    </a>
+    <!--
+      Listserv button temporarily removed. To restore it, move this link back
+      out of the comment and set the href to the Mailman subscription URL.
+
+      <a href="#" class="listserv-btn" target="_blank" rel="noopener noreferrer">
+        Join the Listserv
+      </a>
+    -->
   </header>
 
   <main>
     <section class="events">
       <p class="section-label">Upcoming Events</p>
+
+      <div id="calendar" class="calendar" aria-label="Events calendar">
+        <p class="events-loading">Loading calendar&hellip;</p>
+      </div>
+
+      <p class="section-label" id="term-label">This Quarter</p>
       <div id="events-list">
         <p class="events-loading">Loading events&hellip;</p>
       </div>
