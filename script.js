@@ -43,27 +43,33 @@ function normalize(raw) {
      - Author, Title (Press, Year), chapters 1–3
      About:
      Free text. Anything before the first label is also free text.
+   Inline formatting (bold, italics, links) is kept; everything else is
+   reduced to lines. Values are safe HTML strings.
 --------------------------------------------------------------------- */
 
-const SPEAKER = /^(?:guest\s+)?speakers?\s*:\s*(.*)$/i;
-const READING = /^(?:required\s+)?readings?\s*:\s*(.*)$/i;
-const ABOUT = /^(?:about|description)\s*:\s*(.*)$/i;
+const TAGS = /<[^>]+>/g;
+const SPEAKER = /^(?:guest\s+)?speakers?\s*:/i;
+const READING = /^(?:required\s+)?readings?\s*:/i;
+const ABOUT = /^(?:about|description)\s*:/i;
 const BULLET = /^(?:[-–•*]|\d+[.)])\s+/;
+const afterLabel = html => html.replace(/^(?:<[^>]*>|[^:])*:\s*(?:<\/[^>]*>\s*)*/, '');
+const stripBullet = html => html.replace(/^((?:<[^>]*>\s*)*)(?:[-–•*]|\d+[.)])\s+/, '$1');
 
-function parseDescription(html) {
-  const lines = htmlToText(html).split('\n').map(l => l.trim());
+function parseDescription(raw) {
+  const lines = (/<[a-z\/]/i.test(raw) ? sanitize(raw) : esc(raw)).split('\n').map(l => l.trim());
+  const texts = lines.map(l => l.replace(TAGS, '').trim());
   let speaker = '', mode = 'body';
   const readings = [], body = [];
 
   lines.forEach((line, i) => {
-    let m;
-    if ((m = line.match(SPEAKER))) { speaker = m[1]; mode = 'body'; return; }
-    if ((m = line.match(READING))) { mode = 'reading'; if (m[1]) readings.push(m[1]); return; }
-    if ((m = line.match(ABOUT))) { mode = 'body'; if (m[1]) body.push(m[1]); return; }
+    const text = texts[i], value = afterLabel(line);
+    if (SPEAKER.test(text)) { speaker = value; mode = 'body'; return; }
+    if (READING.test(text)) { mode = 'reading'; if (value) readings.push(stripBullet(value)); return; }
+    if (ABOUT.test(text)) { mode = 'body'; if (value) body.push(value); return; }
     if (mode === 'reading') {
-      if (line) readings.push(line.replace(BULLET, ''));
+      if (text) readings.push(stripBullet(line));
       // A blank line ends the list unless the next line is another bullet.
-      else if (!BULLET.test(lines.slice(i + 1).find(Boolean) || '')) mode = 'body';
+      else if (!BULLET.test(texts.slice(i + 1).find(Boolean) || '')) mode = 'body';
       return;
     }
     body.push(line);
@@ -76,20 +82,18 @@ function parseDescription(html) {
   };
 }
 
-function htmlToText(s) {
-  if (!/<[a-z\/]/i.test(s)) return s;
-  s = s.replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<\/(?:p|div|li|ul|ol|h\d)>/gi, '\n')
+// Reduce Google Calendar HTML to lines with only b/i/u/s and safe links.
+function sanitize(s) {
+  return s.replace(/&nbsp;/g, ' ')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/p>/gi, '\n\n')
+    .replace(/<\/(?:div|li|ul|ol|h\d)>/gi, '\n')
     .replace(/<li\b[^>]*>/gi, '\n- ')
-    // Keep link targets as [label](url) so they survive tag stripping.
-    .replace(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi, (_, href, inner) => {
-      const label = inner.replace(/<[^>]+>/g, '').trim();
-      return label && label !== href ? `[${label}](${href})` : href;
-    })
-    .replace(/<[^>]+>/g, '');
-  const ta = document.createElement('textarea');
-  ta.innerHTML = s;
-  return ta.value.replace(/ /g, ' ');
+    .replace(/<a\b[^>]*href="(https?:\/\/[^"]*)"[^>]*>/gi, '<a href="$1" target="_blank" rel="noopener noreferrer">')
+    .replace(/<(\/?)(?:b|strong)\b[^>]*>/gi, '<$1b>')
+    .replace(/<(\/?)(?:i|em)\b[^>]*>/gi, '<$1i>')
+    .replace(/<(\/?)([us])\b[^>]*>/gi, '<$1$2>')
+    .replace(/<(?!\/?[bius]>|\/a>|a href="https?:\/\/[^"]*" target="_blank" rel="noopener noreferrer">)[^>]*>/g, '');
 }
 
 /* ---- Dates ---------------------------------------------------------- */
@@ -131,13 +135,11 @@ function esc(str) {
   return div.innerHTML;
 }
 
-// Escape, then turn [label](url) and bare URLs into links.
-function inline(text) {
-  return esc(text)
-    .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)|(https?:\/\/[^\s<]+?)(?=[.,;:!?)]*(?:\s|$))/g, (_, label, href, bare) =>
-      `<a href="${href || bare}" target="_blank" rel="noopener noreferrer">${label || bare}</a>`)
-    .replace(/\n/g, '<br>');
-}
+// Link bare URLs (not ones already inside a tag) and keep line breaks.
+const inline = html => html
+  .replace(/(^|[^">])(https?:\/\/[^\s<]+?)(?=[.,;:!?)]*(?:\s|$|<))/g,
+    '$1<a href="$2" target="_blank" rel="noopener noreferrer">$2</a>')
+  .replace(/\n/g, '<br>');
 
 const eventUrl = ev => `./event.html?id=${encodeURIComponent(ev.id)}`;
 
@@ -148,7 +150,7 @@ function addToCalUrl(ev) {
     : `${stamp(ev.start)}/${stamp(ev.end)}`;
   const params = new URLSearchParams({
     action: 'TEMPLATE', text: ev.title, dates, location: ev.location,
-    details: htmlToText(ev.raw.description || ''),
+    details: ev.raw.description || '',
   });
   return `https://calendar.google.com/calendar/render?${params}`;
 }
@@ -175,7 +177,7 @@ function initIndex(events) {
   draw();
 
   const term = termFor(today);
-  document.getElementById('term-label').textContent = term.label;
+  document.getElementById('term-label').textContent = `Upcoming Events · ${term.label}`;
   const upcoming = events.filter(ev => ev.ymd >= today);
   const inTerm = upcoming.filter(ev => termFor(ev.ymd).key === term.key);
   document.getElementById('events-list').innerHTML = inTerm.length
@@ -221,7 +223,7 @@ function renderListItem(ev) {
       </div>
       <div class="event-details">
         <p class="event-title"><a href="${eventUrl(ev)}">${esc(ev.title)}</a></p>
-        ${ev.speaker ? `<p class="event-speaker">${esc(ev.speaker)}</p>` : ''}
+        ${ev.speaker ? `<p class="event-speaker">${inline(ev.speaker)}</p>` : ''}
         <p class="event-time">${when}</p>
         <a class="event-more" href="${eventUrl(ev)}">Details and readings</a>
       </div>
@@ -248,7 +250,7 @@ function initEventPage(events) {
     ['Speaker', ev.speaker && inline(ev.speaker)],
     ['Date', esc(fmtDate(ev, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }))],
     ['Time', esc(timeRange(ev) + tzName)],
-    ['Location', ev.location && inline(ev.location)],
+    ['Location', ev.location && esc(ev.location)],
   ].filter(([, v]) => v).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('');
 
   el.innerHTML = `

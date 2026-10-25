@@ -32,8 +32,8 @@ Details:
   line is also bulleted.
 - `About:` or `Description:` switches back to free text. Text before the first label
   is also treated as free text.
-- Formatting from the calendar editor (bold, bulleted lists, links) is fine. Links
-  survive and are clickable on the event page. Bare URLs are linked automatically.
+- Formatting from the calendar editor is kept on the event page: bold, italics,
+  underline, links, and bulleted or numbered lists. Bare URLs are linked automatically.
 - If an event has no speaker or no readings, those sections are simply left off.
 
 ## Academic terms

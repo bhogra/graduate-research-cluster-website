@@ -169,7 +169,7 @@ a:hover {
    Month calendar
    =========================== */
 
-.calendar {
+#events-list {
   margin-bottom: 4.5rem;
 }
 
