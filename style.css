@@ -92,6 +92,57 @@ a:hover {
   margin-bottom: 2.5rem;
 }
 
+/* Funder credit, set in the Simpson Center's wordmark style */
+
+.funder {
+  display: inline-block;
+  text-decoration: none;
+  color: var(--black);
+}
+
+.funder-label {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 0.6rem;
+}
+
+.simpson-wordmark {
+  display: block;
+  font-family: 'Alegreya Sans', var(--font);
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.simpson-wordmark > span {
+  display: block;
+}
+
+.simpson-wordmark .light {
+  font-weight: 400;
+  text-transform: lowercase;
+}
+
+.simpson-wordmark .upper {
+  text-transform: uppercase;
+}
+
+.simpson-wordmark svg {
+  width: 0.5em;
+  height: 0.5em;
+  margin-left: 0.25em;
+  fill: #EE5A5E;
+}
+
+.funder:hover .simpson-wordmark {
+  color: var(--red);
+}
+
 /* Compact header used on event pages */
 
 .header--compact {
