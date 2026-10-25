@@ -15,7 +15,7 @@
   --cream: #F4F1EB;
   --warm-gray: #E8E4DD;
   --text-secondary: #6E6E6E;
-  --red: #C0392B;
+  --red: #EE5A5E;
   --rule: #D0CCC4;
   --font: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
@@ -62,7 +62,7 @@ a:hover {
 
 .header {
   padding-top: 6rem;
-  padding-bottom: 4rem;
+  padding-bottom: 2.125rem;
 }
 
 .header-rule {
@@ -111,7 +111,7 @@ a:hover {
 
 .simpson-wordmark {
   font-family: 'Alegreya Sans', var(--font);
-  font-size: 0.65rem;
+  font-size: 1.05rem;
   font-weight: 700;
   text-transform: uppercase;
 }
@@ -129,7 +129,7 @@ a:hover {
   width: 0.5em;
   height: 0.5em;
   margin-left: 0.25em;
-  fill: #EE5A5E;
+  fill: var(--red);
 }
 
 .funder:hover .simpson-wordmark {
